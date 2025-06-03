@@ -35,6 +35,8 @@ app.get("/", (req, res) => {
   res.send("its working");
 });
 
+app.use("/api/transactions", transactionsRoute);
+
 initDB().then(() => {
   app.listen(PORT, () => {
     console.log("server is running on port:", PORT);
