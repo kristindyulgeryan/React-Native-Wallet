@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { Alert } from "react-native";
 
-const API_URL = "http://localhost:5001/api";
+const API_URL = "http://localhost:5000/api";
 
 export const useTransactions = (userId) => {
   const [transactions, setTransactions] = useState([]);
@@ -10,7 +10,7 @@ export const useTransactions = (userId) => {
     income: 0,
     expenses: 0,
   });
-  const [isLoading, setIsLoading] = useState();
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchTransactions = useCallback(async () => {
     try {
@@ -26,9 +26,9 @@ export const useTransactions = (userId) => {
     try {
       const response = await fetch(`${API_URL}/transactions/summary/${userId}`);
       const data = await response.json();
-      setTransactions(data);
+      setSummary(data);
     } catch (error) {
-      console.error("Error fetching summery:", error);
+      console.error("Error fetching summary:", error);
     }
   }, [userId]);
 
@@ -50,12 +50,12 @@ export const useTransactions = (userId) => {
       const response = await fetch(`${API_URL}/transactions/${id}`, {
         method: "DELETE",
       });
-      if (!response) throw new Error("Faild to delete transaction");
+      if (!response.ok) throw new Error("Faild to delete transaction");
 
       loadData();
       Alert.alert("Success", "Transaction deleted successfully");
     } catch (error) {
-      console.log("Error deleteing transaction:", error);
+      console.error("Error deleteing transaction:", error);
       Alert.alert("Error", error.message);
     }
   };
